@@ -43,7 +43,7 @@ const tourSchema = new mongoose.Schema({
         type: Number,
         validate: {
             validator: function(val) {
-                // this key word only points to current doc when new doc creates
+                // this key word only points to current doc when new doc creates(save)
                 return val < this.price;
             },
             message: 'Discount price cannot be bigger than original price'

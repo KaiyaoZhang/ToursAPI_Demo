@@ -31,6 +31,7 @@ app.use((err, req, res, next) => {
     err.code = err.error.code || 'null';
     err.path = err.error.path || 'null';
     err.value = err.error.value || 'null';
+    err.error = err.error;
 
     if(process.env.NODE_ENV === 'development'){
         res.status(err.statusCode).json({
@@ -39,6 +40,7 @@ app.use((err, req, res, next) => {
             path: err.path,
             value: err.value,
             code: err.code,
+            error: err.error,
             message: err.message,
             stack: err.stack
         })

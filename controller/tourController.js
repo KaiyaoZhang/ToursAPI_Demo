@@ -97,7 +97,9 @@ exports.getTour = async (req, res, next) => {
     
     res.status(200).json({
         status: 'success',
-        Tour: tour
+        data: {
+            Tour: tour
+        }
     })
   }catch(err){
     // res.status(404).json({
