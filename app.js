@@ -28,9 +28,9 @@ app.use((err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
     err.name = err.error.name || 'Error';
-    err.code = err.error.code || 'null';
-    err.path = err.error.path || 'null';
-    err.value = err.error.value || 'null';
+    err.code = err.error.code;
+    err.path = err.error.path;
+    err.value = err.error.value;
     err.error = err.error;
 
     if(process.env.NODE_ENV === 'development'){
@@ -49,6 +49,12 @@ app.use((err, req, res, next) => {
             let message = err.message;
             if(err.name === 'CastError'){
                 message = `Invalid ${err.path}: ${err.value}`;
+            }
+            if(err.name === 'JsonWebTokenError'){
+                message = 'Invalid token, please login again!'
+            }
+            if(err.name === 'TokenExpiredError'){
+                message = 'Your token has expired, please login again!'
             }
             if(err.code === 11000){
                 const value = err.message.match(/(["'])(?:(?=(\\?))\2.)*?\1/g);

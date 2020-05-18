@@ -33,7 +33,8 @@ const userSchema = new mongoose.Schema({
             },
             message: 'The passwords you typed in are not the same!'
         }
-    }
+    },
+    passwordChangedAt: Date
 });
 
 
