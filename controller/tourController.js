@@ -93,7 +93,7 @@ exports.checkBody = (req, res, next) => {
 
 exports.getTour = async (req, res, next) => {
   try{
-    const tour = await Tour.findById(req.params.id);
+    const tour = await Tour.findById(req.params.id).populate({path: 'reviews', select: 'review rating -tour'});
     
     res.status(200).json({
         status: 'success',

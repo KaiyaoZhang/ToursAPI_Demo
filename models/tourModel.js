@@ -67,8 +67,59 @@ const tourSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-    startDates: [Date]
+    startDates: [Date],
+    startLocation: {
+        type:{
+            type: String,
+            default: 'Point',
+            enum: ['Point']
+        },
+        coordinates: [Number],
+        address: String,
+        description: String
+    },
+    location: [
+        {
+            type:{
+                type: String,
+                default: 'Point',
+                enum: ['Point']
+            },
+            coordinates: [Number],
+            address: String,
+            description: String,
+            day: Number
+        }
+    ],
+    guides: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User'
+        }
+    ]
+}, {
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true},
+    id: false
 });
+
+
+//In query middleware, this keyword always points to the current query
+tourSchema.pre(/^find/, function(next){
+    this.populate({path: 'guides', select:'-__v -email'});
+    next();
+})
+
+tourSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'tour',
+    localField: '_id'
+});
+/* tourSchema.pre('save', async function(next){
+    const guidesPromises = this.guides.map(async id => await User.findById(id));
+    this.guides = await Promise.all(guidesPromises);
+    next();
+}) */
 
 const Tour = mongoose.model('Tour', tourSchema);
 
