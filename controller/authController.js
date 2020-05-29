@@ -127,15 +127,15 @@ exports.forgetPassword = async (req, res, next) => {
         //3. Send it to user's email
         const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`
         const server 	= email.server.connect({
-            user:    "",
-            password:"",
-            host:    "",
+            user:    "AKIAQRZDYXOAN3LGS76M",
+            password:"BKL+aeCKlXK39iLsFKRiyF7ecHSYcAHkMp8zQFxHoWxS",
+            host:    "email-smtp.us-west-2.amazonaws.com",
             ssl:     true
         });
 
         server.send({
             text:    'Please click on the link to reset your password: ' + resetURL, 
-            from:    "", 
+            from:    "customService@rookhotel.com", 
             to:      req.body.email,
             subject: "testing emailjs"
         }, (err, message) => {
@@ -198,6 +198,8 @@ exports.updatePassword = async (req, res, next) => {
         user.password = newPassword;
         user.passwordChangedAt = Date.now();
         user.passwordConfirm = newPassword;
+        user.passwordResetToken = undefined;
+        user.passwordResetExpires = undefined;
         await user.save();
         //4. Log in user, send JWT
         createSendToken(user, 200, res);

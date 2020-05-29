@@ -1,39 +1,25 @@
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
+const {deleteOne, getOne, getAll} = require('./factoryController');
 
 const filterObj = (obj, ...properties) => {
     let newObj = {};
     Object.keys(obj).forEach(el => {
-        if(properties.includes(el)) newObj[el] = obj[el]
+        if(!properties.includes(el)) newObj[el] = obj[el]
     })
 
     return newObj;
-}
+};
 
-exports.getUsers = async (req, res, next) => {
-    try{
-        const Users = await User.find();
-        res.status(200).json({
-            status: 'success',
-            results: Users.length,
-            data: {
-                Users: Users
-            }
-        })
-    }catch(err){
-        next(new AppError(err.message, 404, err));
-    }
-}
+exports.getUsers = getAll(User);
 
-exports.getUser = (req, res) => {
-    try{
-        res.status(500).json({
-            status: 'error',
-            message: 'No information now'
-        })
-    }catch(err){
-        console.log(err);
-    }
+exports.getUser = getOne(User);
+
+exports.deleteUser = deleteOne(User);
+
+exports.getMe = (req, res, next) => {
+    req.params.id = req.user._id;
+    next();
 }
 
 exports.updateMe = async(req, res, next) => {
@@ -55,7 +41,7 @@ exports.updateMe = async(req, res, next) => {
     }catch(err){
         next(new AppError(err.message, 400, err));
     }
-}
+};
 
 exports.createUser = (req, res) => {
     try{
@@ -66,7 +52,7 @@ exports.createUser = (req, res) => {
     }catch(err){
         console.log(err);
     }
-}
+};
 
 exports.updateUser = (req, res) => {
     try{
@@ -77,7 +63,7 @@ exports.updateUser = (req, res) => {
     }catch(err){
         console.log(err);
     }
-}
+};
 
 exports.deleteMe = async (req, res, next) => {
     try{
@@ -89,4 +75,5 @@ exports.deleteMe = async (req, res, next) => {
     }catch(err){
         next(new AppError(err.message, 400, err))
     }
-}
+};
+

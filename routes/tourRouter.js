@@ -1,7 +1,7 @@
 const express = require('express');
 const {
     getTours, 
-    addTour, 
+    createTour, 
     getTour, 
     updateTour, 
     deleteTour,
@@ -18,8 +18,8 @@ const tourRouter = express.Router();
 tourRouter.route('/top-5-cheap').get(aliasTopTours, getTours);
 tourRouter.route('/stats').get(getTourStat);
 tourRouter.route('/monthly-tour/:year').get(getMonthlyTour);
-tourRouter.route('/').get(protect, getTours).post(protect, addTour);
-tourRouter.route('/:id').get(getTour).patch(updateTour).delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
+tourRouter.route('/').get(protect, getTours).post(protect, createTour);
+tourRouter.route('/:id').get(protect, getTour).patch(protect, updateTour).delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
 tourRouter.use('/:tourId/reviews', reviewRouter);
 //tourRouter.route('/:tourId/reviews').post(protect, createReview);
 //tourRouter.route('/:tourId/reviews/:reviewId').get(protect, getReview);
