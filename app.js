@@ -10,8 +10,11 @@ const userRouter = require('./routes/userRouter');
 const reviewRouter = require('./routes/reviewRouter');
 const AppError = require('./utils/appError');
 const hpp = require('hpp');
+const cors = require('cors');
+
 // Middlewares
 
+app.use(cors());
 //Set security HTTP headers
 app.use(helmet());
 

@@ -25,7 +25,7 @@ const tourSchema = new mongoose.Schema({
             message: 'Difficulty must be easy, medium, or difficulty'
         }
     },
-    ratingAverage: {
+    ratingsAverage: {
         type: Number,
         default: 4.5,
         min: [1, 'Rating must be above 1'],
@@ -103,6 +103,9 @@ const tourSchema = new mongoose.Schema({
     id: false
 });
 
+
+tourSchema.index({duration: 1});
+tourSchema.index({startLocation: '2dsphere'});
 
 //In query middleware, this keyword always points to the current query
 tourSchema.pre(/^find/, function(next){

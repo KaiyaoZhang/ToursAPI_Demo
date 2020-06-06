@@ -99,7 +99,6 @@ exports.getAll = Model => {
              const queryStr2 = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
              const queryObj2 = JSON.parse(queryStr2);
              filter = {...queryObj2, ...reviewFilter};
-             console.log(filter);
              let query = Model.find(filter);
      
              //Sorting 
@@ -133,6 +132,7 @@ exports.getAll = Model => {
              docs = await query;
              res.status(200).json({
                  status: 'success',
+                 headers: req.headers,
                  length: docs.length,
                  data: {
                     docs

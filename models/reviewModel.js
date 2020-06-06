@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const round = require('mongo-round');
+const Tour = require('./tourModel');
 
 const reviewSchema = new mongoose.Schema({
     review: {
@@ -36,6 +38,29 @@ reviewSchema.pre(/^find/, async function(next){
     .populate({path: 'tour', select: 'name -guides'});
     
     next();
+})
+
+reviewSchema.statics.calcRatings = async function(tourId){
+    //this keyword points to current model
+   const stat = await this.aggregate([
+        {$match: { tour: tourId }},
+        {$group: {
+            _id: '$tour',
+            nRatings: {$sum: 1},
+            avgRating: {$avg: '$rating'}
+        }},
+        {$addFields: { avgRating: round('$avgRating', 2) }}
+    ])
+
+    await Tour.findByIdAndUpdate(tourId, {
+        ratingsQuantity: stat[0].nRatings,
+        ratingsAverage: stat[0].avgRating
+    });
+};
+
+reviewSchema.post('save', function(){
+    //this points to the current document, this.constructor points to the current model.
+    this.constructor.calcRatings(this.tour);
 })
 
 const Review = mongoose.model('Review', reviewSchema);

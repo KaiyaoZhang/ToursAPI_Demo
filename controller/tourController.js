@@ -103,4 +103,31 @@ exports.getMonthlyTour = async (req, res) => {
             err: err
         })
     }
-}
+};
+
+
+//  '/tour-within/:distance/center/:latlng/unit/:unit'
+exports.getToursWithin = async (req, res, next) => {
+    try{
+        const { distance, latlng, unit } = req.params;
+        const [ lat, lng ] = latlng.split(',');
+        const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+        if(!lat || !lng){
+            return next(new AppError('Incorrect location information!', 400, ''))
+        }
+
+        const tours = await Tour.find({
+            startLocation: {$geoWithin: { $centerSphere: [ [ lng, lat ] , radius ] } }
+        })
+
+        res.status(200).json({
+            status: 'success',
+            results: tours.length,
+            tours
+        })
+
+
+    }catch(err) {
+        next(new AppError(err.message, 404, err))
+    }
+};
