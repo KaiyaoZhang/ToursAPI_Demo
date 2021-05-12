@@ -24,7 +24,7 @@
     "mongo-round": "^1.0.0",
     "mongoose": "^5.9.11",
     "morgan": "^1.10.0",
-    "nodemailer": "^6.4.6",
+    "nodemailer": "^6.4.16",
     "validator": "^13.0.0",
     "xss-clean": "^0.1.1"
   },
